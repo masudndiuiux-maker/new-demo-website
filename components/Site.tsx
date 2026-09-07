@@ -226,7 +226,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => dispatchEvent(new Event("openResource"))}
-              className="btn px-2 text-ink hover:text-primary"
+              className="btn border border-primary bg-white px-4 text-primary hover:bg-primary/5 2xl:px-6"
             >
               {language === "en" ? "Download guide" : "資料ダウンロード"}
             </button>

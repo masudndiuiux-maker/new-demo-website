@@ -107,113 +107,157 @@ export function Header() {
     [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const f = () => setScrolled(scrollY > 20);
-    addEventListener("scroll", f);
+    f();
+    addEventListener("scroll", f, { passive: true });
     return () => removeEventListener("scroll", f);
   }, []);
+  useEffect(() => {
+    if (!menu) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const desktop = matchMedia("(min-width: 1280px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setMenu(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      desktop.removeEventListener("change", closeOnDesktop);
+    };
+  }, [menu]);
+  useEffect(() => {
+    if (!menu && !mega) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+        setMega(false);
+      }
+    };
+    addEventListener("keydown", closeOnEscape);
+    return () => removeEventListener("keydown", closeOnEscape);
+  }, [menu, mega]);
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur transition-shadow ${scrolled ? "shadow-md" : ""}`}
-    >
-      <div className="container-wide flex h-[76px] items-center justify-between">
-        <Logo />
-        <nav
-          className="hidden items-center gap-6 lg:flex"
-          aria-label={
-            language === "en" ? "Main navigation" : "メインナビゲーション"
-          }
-        >
-          <div
-            onMouseEnter={() => setMega(true)}
-            onMouseLeave={() => setMega(false)}
-          >
-            <button
-              onClick={() => setMega(!mega)}
-              aria-expanded={mega}
-              className="flex min-h-11 items-center gap-1 text-sm font-bold"
-            >
-              {language === "en" ? "Services" : "サービス"}
-              <ChevronDown size={15} />
-            </button>
-            <AnimatePresence>
-              {mega && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  className="absolute left-1/2 top-[68px] w-[900px] -translate-x-1/2 rounded-3xl border bg-white p-8 shadow-soft"
-                >
-                  <p className="mb-5 text-xs font-bold tracking-widest text-orange">
-                    SERVICE MENU
-                  </p>
-                  <div className="grid grid-cols-3 gap-6">
-                    {groups.map((g) => (
-                      <div key={g.id}>
-                        <a
-                          href={`#${g.id}`}
-                          onClick={() => setMega(false)}
-                          className="mb-3 block border-b pb-3 font-bold hover:text-orange"
-                        >
-                          {g.title}
-                        </a>
-                        {g.services.map((s) => (
-                          <a
-                            key={s[0]}
-                            href={`#${g.id}`}
-                            className="block py-1.5 text-sm text-slate-600 hover:text-orange"
-                          >
-                            {s[0]}
-                          </a>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 bg-white/95 backdrop-blur transition-shadow ${scrolled ? "shadow-md" : ""}`}
+      >
+        <div className="container-wide flex h-[76px] max-w-[1536px] items-center justify-between gap-4 whitespace-nowrap">
+          <div className="shrink-0">
+            <Logo />
           </div>
-          {navigation.map((n) => (
-            <a
-              key={n[0]}
-              href={n[1]}
-              className="text-sm font-bold hover:text-orange"
-            >
-              {n[0]}
-            </a>
-          ))}
-        </nav>
-        <div className="hidden lg:block">
-          <LanguageToggle />
-        </div>
-        <div className="hidden gap-2 xl:flex">
-          <button
-            onClick={() => dispatchEvent(new Event("openResource"))}
-            className="btn-dark"
+          <nav
+            className="hidden h-full items-center gap-4 xl:flex 2xl:gap-6"
+            aria-label={
+              language === "en" ? "Main navigation" : "メインナビゲーション"
+            }
           >
-            <Download size={16} />
-            {language === "en" ? "Download guide" : "資料ダウンロード"}
+            <div
+              className="flex h-full items-center"
+              onMouseEnter={() => setMega(true)}
+              onMouseLeave={() => setMega(false)}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setMega(false);
+                }
+              }}
+            >
+              <button
+                onClick={() => setMega(!mega)}
+                aria-expanded={mega}
+                aria-controls="service-menu"
+                className="flex min-h-11 items-center gap-1 text-sm font-bold"
+              >
+                {language === "en" ? "Services" : "サービス"}
+                <ChevronDown size={15} />
+              </button>
+              <AnimatePresence>
+                {mega && (
+                  <motion.div
+                    id="service-menu"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    className="absolute inset-x-0 top-full mx-auto w-[900px] whitespace-normal rounded-3xl border bg-white p-8 shadow-soft"
+                  >
+                    <p className="mb-5 text-xs font-bold tracking-widest text-orange">
+                      SERVICE MENU
+                    </p>
+                    <div className="grid grid-cols-3 gap-6">
+                      {groups.map((g) => (
+                        <div key={g.id}>
+                          <a
+                            href={`#${g.id}`}
+                            onClick={() => setMega(false)}
+                            className="mb-3 block border-b pb-3 font-bold hover:text-orange"
+                          >
+                            {g.title}
+                          </a>
+                          {g.services.map((s) => (
+                            <a
+                              key={s[0]}
+                              href={`#${g.id}`}
+                              onClick={() => setMega(false)}
+                              className="block py-1.5 text-sm text-slate-600 hover:text-orange"
+                            >
+                              {s[0]}
+                            </a>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            {navigation.map((n) => (
+              <a
+                key={n[0]}
+                href={n[1]}
+                className="text-sm font-bold hover:text-orange"
+              >
+                {n[0]}
+              </a>
+            ))}
+          </nav>
+          <div className="hidden shrink-0 xl:block">
+            <LanguageToggle />
+          </div>
+          <div className="hidden shrink-0 gap-2 xl:flex">
+            <button
+              onClick={() => dispatchEvent(new Event("openResource"))}
+              className="btn-dark hidden 2xl:inline-flex"
+            >
+              <Download size={16} />
+              {language === "en" ? "Download guide" : "資料ダウンロード"}
+            </button>
+            <a className="btn-orange" href="#contact">
+              {language === "en" ? "Contact us" : "お問い合わせ"}
+            </a>
+          </div>
+          <button
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-ink text-white xl:hidden"
+            onClick={() => setMenu(true)}
+            aria-expanded={menu}
+            aria-controls="mobile-menu"
+            aria-label={language === "en" ? "Open menu" : "メニューを開く"}
+          >
+            <Menu />
           </button>
-          <a className="btn-orange" href="#contact">
-            {language === "en" ? "Contact us" : "お問い合わせ"}
-          </a>
         </div>
-        <button
-          className="grid h-12 w-12 place-items-center rounded-full bg-ink text-white lg:hidden"
-          onClick={() => setMenu(true)}
-          aria-label={language === "en" ? "Open menu" : "メニューを開く"}
-        >
-          <Menu />
-        </button>
-      </div>
+      </header>
       <AnimatePresence>
         {menu && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            className="fixed inset-0 min-h-screen overflow-y-auto bg-ink p-6 text-white lg:hidden"
+            className="fixed inset-x-0 top-0 z-[60] h-[100dvh] overflow-y-auto overscroll-contain bg-ink p-6 text-white xl:hidden"
           >
             <div className="flex items-center justify-between">
-              <Logo light />
+              <div onClick={() => setMenu(false)}>
+                <Logo light />
+              </div>
               <button
                 className="grid h-12 w-12 place-items-center rounded-full border border-white/30"
                 onClick={() => setMenu(false)}
@@ -269,7 +313,7 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 const Reveal = ({

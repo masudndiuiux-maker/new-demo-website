@@ -224,10 +224,10 @@ export function Header() {
           </div>
           <div className="hidden shrink-0 gap-2 xl:flex">
             <button
+              type="button"
               onClick={() => dispatchEvent(new Event("openResource"))}
-              className="btn-dark hidden 2xl:inline-flex"
+              className="btn px-2 text-ink hover:text-primary"
             >
-              <Download size={16} />
               {language === "en" ? "Download guide" : "資料ダウンロード"}
             </button>
             <a className="btn-primary" href="#contact">

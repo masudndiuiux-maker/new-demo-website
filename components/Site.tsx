@@ -519,7 +519,7 @@ function Services() {
                   <Reveal key={s[0]}>
                     <a
                       href="#contact"
-                      className="group block min-h-[260px] rounded-[28px] border border-black/5 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-soft"
+                      className="group flex h-full min-h-[260px] flex-col rounded-[28px] border border-black/5 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-soft"
                     >
                       <span className="text-xs font-black text-orange">
                         SERVICE {s[2]}
@@ -528,7 +528,7 @@ function Services() {
                       <p className="mt-4 text-sm leading-7 text-slate-600">
                         {s[1]}
                       </p>
-                      <span className="mt-7 flex items-center justify-between text-sm font-bold">
+                      <span className="mt-auto flex items-center justify-between pt-7 text-sm font-bold">
                         {english ? "Explore service" : "詳しく見る"}{" "}
                         <i className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition group-hover:bg-orange">
                           <ArrowRight size={16} />

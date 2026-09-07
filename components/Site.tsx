@@ -16,7 +16,7 @@ import {
   CheckCircle2,
   ArrowUp,
 } from "lucide-react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   articles,
   articlesEn,
@@ -701,7 +701,7 @@ function Cases() {
             </p>
           </div>
         </Reveal>
-        <div className="mt-14 grid gap-7 lg:grid-cols-2">
+        <div className="mt-14 grid grid-cols-1 gap-7 lg:grid-cols-2">
           {cases.map((c, i) => (
             <Reveal key={c.name}>
               <article className="group h-full overflow-hidden rounded-[32px] border border-ink/10 bg-white p-2 shadow-soft transition duration-500 hover:-translate-y-2 hover:shadow-[0_24px_60px_rgba(23,32,51,.15)]">
@@ -711,7 +711,7 @@ function Cases() {
                   <span className="absolute -bottom-12 -right-2 text-[11rem] font-black leading-none tracking-tighter text-ink/[.05]">
                     0{i + 1}
                   </span>
-                  <div className="relative flex items-center justify-between gap-3">
+                  <div className="relative flex flex-wrap items-center justify-between gap-3">
                     <span className="rounded-full border border-ink/10 bg-white/80 px-4 py-2 text-[10px] font-black tracking-[.16em] text-ink">
                       CASE STUDY 0{i + 1}
                     </span>
@@ -719,7 +719,7 @@ function Cases() {
                       {c.badge}
                     </span>
                   </div>
-                  <div className="relative mt-10 grid grid-cols-[1fr_auto] items-end gap-4">
+                  <div className="relative mt-10 grid grid-cols-[minmax(0,1fr)_80px] items-end gap-4 sm:grid-cols-[1fr_auto]">
                     <div>
                       <p className="text-sm font-bold text-slate-600">
                         {c.metricLabel}
@@ -731,7 +731,7 @@ function Cases() {
                         </span>
                       </p>
                     </div>
-                    <div className="w-28 rotate-[-5deg] transition duration-500 group-hover:rotate-0 md:w-36">
+                    <div className="w-20 rotate-[-5deg] transition duration-500 group-hover:rotate-0 sm:w-28 md:w-36">
                       <ShieldArt index={i} />
                     </div>
                   </div>
@@ -847,9 +847,9 @@ function Resource() {
     <section className="bg-cream py-24">
       <div className="container-wide">
         <Reveal>
-          <div className="grid overflow-hidden rounded-[36px] bg-white shadow-soft md:grid-cols-[.8fr_1.2fr]">
-            <div className="grid min-h-[380px] place-items-center bg-ink p-10">
-              <div className="w-56 rotate-[-5deg] rounded-lg bg-white p-7 shadow-2xl">
+          <div className="grid grid-cols-1 overflow-hidden rounded-[36px] bg-white shadow-soft md:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)]">
+            <div className="grid min-h-[380px] place-items-center bg-ink p-6 sm:p-10">
+              <div className="w-56 max-w-full rotate-[-5deg] rounded-lg bg-white p-7 shadow-2xl">
                 <p className="text-xs font-black text-primary">SPECIAL GUIDE</p>
                 <div className="my-8 h-1 w-12 bg-primary" />
                 <p className="text-2xl font-black leading-tight">
@@ -873,7 +873,7 @@ function Resource() {
                 <ShieldArt />
               </div>
             </div>
-            <div className="flex flex-col justify-center p-8 md:p-14">
+            <div className="flex flex-col justify-center p-6 sm:p-8 md:p-14">
               <p className="eyebrow">FREE DOWNLOAD</p>
               <h2 className="text-3xl font-black md:text-4xl">
                 {english ? (
@@ -1008,6 +1008,9 @@ function Modal({
   const [done, setDone] = useState(false),
     ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    const opener = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
     const key = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "Tab") {
@@ -1028,11 +1031,17 @@ function Modal({
     };
     addEventListener("keydown", key);
     ref.current?.querySelector<HTMLElement>("button")?.focus();
-    return () => removeEventListener("keydown", key);
+    return () => {
+      removeEventListener("keydown", key);
+      opener?.focus({ preventScroll: true });
+    };
   }, [onClose]);
+  useEffect(() => {
+    if (done) ref.current?.querySelector<HTMLElement>("button")?.focus();
+  }, [done]);
   return (
     <motion.div
-      className="fixed inset-0 z-[80] grid place-items-center overflow-y-auto bg-ink/70 p-4"
+      className="fixed inset-0 z-[80] flex items-start justify-center overflow-y-auto bg-ink/70 p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -1045,7 +1054,7 @@ function Modal({
         ref={ref}
         initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
-        className="my-5 w-full max-w-xl rounded-3xl bg-white p-6 md:p-10"
+        className="my-auto w-full max-w-xl shrink-0 rounded-3xl bg-white p-6 md:p-10"
       >
         <button
           onClick={onClose}
@@ -1283,6 +1292,7 @@ function Floating() {
 export default function Site() {
   const [modal, setModal] = useState<null | "contact" | "resource">(null);
   const [language, setLanguage] = useState<Language>("ja");
+  const closeModal = useCallback(() => setModal(null), []);
   useEffect(() => {
     const c = () => setModal("contact"),
       r = () => setModal("resource");
@@ -1322,7 +1332,7 @@ export default function Site() {
       <Footer />
       <Floating />
       <AnimatePresence>
-        {modal && <Modal type={modal} onClose={() => setModal(null)} />}
+        {modal && <Modal type={modal} onClose={closeModal} />}
       </AnimatePresence>
     </LanguageContext.Provider>
   );

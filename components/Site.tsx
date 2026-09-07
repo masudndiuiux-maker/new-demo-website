@@ -69,7 +69,7 @@ function LanguageToggle({ dark = false }: { dark?: boolean }) {
           type="button"
           onClick={() => setLanguage(item)}
           aria-pressed={language === item}
-          className={`min-h-8 rounded-full px-3 transition ${language === item ? "bg-orange text-white" : "hover:text-orange"}`}
+          className={`min-h-8 rounded-full px-3 transition ${language === item ? "bg-primary text-white" : (dark ? "hover:text-primary-light" : "hover:text-primary")}`}
         >
           {item === "ja" ? "JP" : "EN"}
         </button>
@@ -85,13 +85,13 @@ function Logo({ light = false }: { light?: boolean }) {
       className="flex items-center gap-2 font-black leading-none"
       aria-label={language === "en" ? "Back to top" : "トップへ"}
     >
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-orange text-white">
+      <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-white">
         <ShieldCheck size={23} />
       </span>
       <span className={light ? "text-white" : ""}>
         REPUTATION
         <br />
-        <span className="text-[10px] tracking-[.18em] text-orange">
+        <span className={`text-[10px] tracking-[.18em] ${light ? "text-primary-light" : "text-primary"}`}>
           GUARD CLOUD
         </span>
       </span>
@@ -179,7 +179,7 @@ export function Header() {
                     exit={{ opacity: 0, y: 8 }}
                     className="absolute inset-x-0 top-full mx-auto w-[900px] whitespace-normal rounded-3xl border bg-white p-8 shadow-soft"
                   >
-                    <p className="mb-5 text-xs font-bold tracking-widest text-orange">
+                    <p className="mb-5 text-xs font-bold tracking-widest text-primary">
                       SERVICE MENU
                     </p>
                     <div className="grid grid-cols-3 gap-6">
@@ -188,7 +188,7 @@ export function Header() {
                           <a
                             href={`#${g.id}`}
                             onClick={() => setMega(false)}
-                            className="mb-3 block border-b pb-3 font-bold hover:text-orange"
+                            className="mb-3 block border-b pb-3 font-bold hover:text-primary"
                           >
                             {g.title}
                           </a>
@@ -197,7 +197,7 @@ export function Header() {
                               key={s[0]}
                               href={`#${g.id}`}
                               onClick={() => setMega(false)}
-                              className="block py-1.5 text-sm text-slate-600 hover:text-orange"
+                              className="block py-1.5 text-sm text-slate-600 hover:text-primary"
                             >
                               {s[0]}
                             </a>
@@ -213,7 +213,7 @@ export function Header() {
               <a
                 key={n[0]}
                 href={n[1]}
-                className="text-sm font-bold hover:text-orange"
+                className="text-sm font-bold hover:text-primary"
               >
                 {n[0]}
               </a>
@@ -230,7 +230,7 @@ export function Header() {
               <Download size={16} />
               {language === "en" ? "Download guide" : "資料ダウンロード"}
             </button>
-            <a className="btn-orange" href="#contact">
+            <a className="btn-primary" href="#contact">
               {language === "en" ? "Contact us" : "お問い合わせ"}
             </a>
           </div>
@@ -279,7 +279,7 @@ export function Header() {
                   : "モバイルナビゲーション"
               }
             >
-              <p className="mb-4 text-xs text-orange">SERVICES</p>
+              <p className="mb-4 text-xs text-primary-light">SERVICES</p>
               {groups.map((g) => (
                 <a
                   onClick={() => setMenu(false)}
@@ -303,7 +303,7 @@ export function Header() {
             </nav>
             <a
               onClick={() => setMenu(false)}
-              className="btn-orange mt-8 w-full"
+              className="btn-primary mt-8 w-full"
               href="#contact"
             >
               {language === "en"
@@ -340,14 +340,16 @@ function Heading({
   en,
   children,
   center = false,
+  light = false,
 }: {
   en: string;
   children: React.ReactNode;
   center?: boolean;
+  light?: boolean;
 }) {
   return (
     <div className={center ? "text-center" : ""}>
-      <p className="eyebrow">{en}</p>
+      <p className={`eyebrow ${light ? "eyebrow-light" : ""}`}>{en}</p>
       <h2 className="section-title">{children}</h2>
     </div>
   );
@@ -388,7 +390,7 @@ function Hero() {
                 <br />
               </>
             )}
-            <span className="relative text-orange">
+            <span className="relative text-primary">
               {english
                 ? "It can be lost in an instant."
                 : "失うのは、ほんの一瞬。"}
@@ -399,7 +401,7 @@ function Hero() {
                 <path
                   d="M4 10c105-9 253 5 392-6"
                   fill="none"
-                  stroke="#F15A24"
+                  stroke="currentColor"
                   strokeWidth="6"
                   strokeLinecap="round"
                 />
@@ -422,7 +424,7 @@ function Hero() {
             )}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="#contact" className="btn-orange">
+            <a href="#contact" className="btn-primary">
               {english
                 ? "Start with a free consultation"
                 : "まずは無料で相談する"}
@@ -500,7 +502,7 @@ function Services() {
                 className={`grid items-end gap-8 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}
               >
                 <div>
-                  <span className="text-xs font-black tracking-[.22em] text-orange">
+                  <span className="text-xs font-black tracking-[.22em] text-primary">
                     0{i + 1} / {g.en}
                   </span>
                   <h3 className="mt-4 text-3xl font-black md:text-5xl">
@@ -521,7 +523,7 @@ function Services() {
                       href="#contact"
                       className="group flex h-full min-h-[260px] flex-col rounded-[28px] border border-black/5 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-soft"
                     >
-                      <span className="text-xs font-black text-orange">
+                      <span className="text-xs font-black text-primary">
                         SERVICE {s[2]}
                       </span>
                       <h4 className="mt-10 text-xl font-black">{s[0]}</h4>
@@ -530,7 +532,7 @@ function Services() {
                       </p>
                       <span className="mt-auto flex items-center justify-between pt-7 text-sm font-bold">
                         {english ? "Explore service" : "詳しく見る"}{" "}
-                        <i className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition group-hover:bg-orange">
+                        <i className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition group-hover:bg-primary">
                           <ArrowRight size={16} />
                         </i>
                       </span>
@@ -562,7 +564,7 @@ function Count({ value, suffix }: { value: number; suffix: string | number }) {
   return (
     <span ref={ref}>
       {n}
-      <small className="text-2xl text-orange md:text-3xl">{suffix}</small>
+      <small className="text-2xl text-primary-light md:text-3xl">{suffix}</small>
     </span>
   );
 }
@@ -583,7 +585,7 @@ function Statistics() {
   return (
     <section id="strength" className="overflow-hidden bg-ink py-24 text-white">
       <div className="container-wide">
-        <Heading en="WHY CHOOSE US">
+        <Heading en="WHY CHOOSE US" light>
           {english
             ? "The numbers behind our partnership."
             : "数字で見る、選ばれる理由。"}
@@ -692,7 +694,7 @@ function Cases() {
                 </>
               )}
             </Heading>
-            <p className="max-w-md border-l-2 border-orange pl-5 leading-8 text-slate-600 lg:mb-1 lg:justify-self-end">
+            <p className="max-w-md border-l-2 border-primary pl-5 leading-8 text-slate-600 lg:mb-1 lg:justify-self-end">
               {english
                 ? "Beyond the numbers, these stories show the change teams feel every day when we take on the challenge together."
                 : "数字だけでは測れない、現場の変化まで。課題に向き合い、ともに前へ進んだお客様の声をご紹介します。"}
@@ -724,7 +726,7 @@ function Cases() {
                       </p>
                       <p className="mt-1 text-[clamp(4.5rem,10vw,6.5rem)] font-black leading-none tracking-[-.08em] text-ink">
                         {c.metric}
-                        <span className="ml-1 text-3xl tracking-normal text-orange md:text-4xl">
+                        <span className="ml-1 text-3xl tracking-normal text-primary md:text-4xl">
                           {c.unit}
                         </span>
                       </p>
@@ -741,7 +743,7 @@ function Cases() {
                   </h3>
                   <div className="mt-6 grid gap-5 border-y border-ink/10 py-5">
                     <div>
-                      <p className="text-[10px] font-black tracking-[.18em] text-orange">
+                      <p className="text-[10px] font-black tracking-[.18em] text-primary">
                         CHALLENGE
                       </p>
                       <p className="mt-2 text-sm leading-7 text-slate-600">
@@ -749,7 +751,7 @@ function Cases() {
                       </p>
                     </div>
                     <blockquote className="relative border-l-2 border-ink pl-4 text-sm font-bold leading-7 text-ink">
-                      <span className="absolute -top-3 left-3 text-4xl leading-none text-orange">
+                      <span className="absolute -top-3 left-3 text-4xl leading-none text-primary">
                         “
                       </span>
                       <span className="block pt-3">{c.quote}</span>
@@ -757,12 +759,12 @@ function Cases() {
                   </div>
                   <button
                     onClick={() => dispatchEvent(new Event("openContact"))}
-                    className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-black transition hover:gap-3 hover:text-orange"
+                    className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-black transition hover:gap-3 hover:text-primary"
                   >
                     {english
                       ? "Discuss a similar challenge"
                       : "同様の課題を相談する"}{" "}
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-white transition group-hover:bg-orange">
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-white transition group-hover:bg-primary">
                       <ArrowRight size={15} />
                     </span>
                   </button>
@@ -781,7 +783,7 @@ function ContactCTA() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-orange py-20 text-white md:py-28"
+      className="relative overflow-hidden bg-primary py-20 text-white md:py-28"
     >
       <div className="absolute -right-16 -top-24 h-80 w-80 rounded-full border-[55px] border-white/10" />
       <div className="container-wide relative grid items-center gap-10 lg:grid-cols-[1fr_360px]">
@@ -812,7 +814,7 @@ function ContactCTA() {
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <button
               onClick={() => dispatchEvent(new Event("openContact"))}
-              className="btn bg-white text-orange hover:bg-ink hover:text-white"
+              className="btn bg-white text-primary hover:bg-ink hover:text-white"
             >
               {english
                 ? "Request a free risk assessment"
@@ -848,8 +850,8 @@ function Resource() {
           <div className="grid overflow-hidden rounded-[36px] bg-white shadow-soft md:grid-cols-[.8fr_1.2fr]">
             <div className="grid min-h-[380px] place-items-center bg-ink p-10">
               <div className="w-56 rotate-[-5deg] rounded-lg bg-white p-7 shadow-2xl">
-                <p className="text-xs font-black text-orange">SPECIAL GUIDE</p>
-                <div className="my-8 h-1 w-12 bg-orange" />
+                <p className="text-xs font-black text-primary">SPECIAL GUIDE</p>
+                <div className="my-8 h-1 w-12 bg-primary" />
                 <p className="text-2xl font-black leading-tight">
                   {english ? (
                     <>
@@ -895,7 +897,7 @@ function Resource() {
               </p>
               <button
                 onClick={() => dispatchEvent(new Event("openResource"))}
-                className="btn-orange mt-8 self-start"
+                className="btn-primary mt-8 self-start"
               >
                 {english ? "Download for free" : "無料でダウンロード"}
                 <Download size={18} />
@@ -941,11 +943,11 @@ function Content() {
                       <ShieldArt index={i} />
                     </div>
                     <div className="pt-5">
-                      <p className="text-xs font-bold text-orange">
+                      <p className="text-xs font-bold text-primary">
                         {a.category}　
                         <span className="text-slate-400">{a.date}</span>
                       </p>
-                      <h3 className="mt-3 text-xl font-black leading-8 group-hover:text-orange">
+                      <h3 className="mt-3 text-xl font-black leading-8 group-hover:text-primary">
                         {a.title}
                       </h3>
                       <p className="mt-3 text-sm leading-6 text-slate-500">
@@ -972,8 +974,8 @@ function Content() {
                 className="group grid gap-2 border-b border-ink/15 py-6 md:grid-cols-[110px_100px_1fr_30px]"
               >
                 <time className="text-sm text-slate-500">{n[0]}</time>
-                <span className="text-xs font-bold text-orange">{n[1]}</span>
-                <span className="font-bold group-hover:text-orange">
+                <span className="text-xs font-bold text-primary">{n[1]}</span>
+                <span className="font-bold group-hover:text-primary">
                   {n[2]}
                 </span>
                 <ArrowRight
@@ -1054,7 +1056,7 @@ function Modal({
         </button>
         {done ? (
           <div className="py-16 text-center">
-            <CheckCircle2 className="mx-auto text-orange" size={60} />
+            <CheckCircle2 className="mx-auto text-primary" size={60} />
             <h2 id="modal-title" className="mt-6 text-2xl font-black">
               {english
                 ? "Thank you for your enquiry"
@@ -1092,7 +1094,7 @@ function Modal({
             >
               <label className="block text-sm font-bold">
                 {english ? "Company name" : "会社名"}
-                <span className="text-orange"> *</span>
+                <span className="text-primary"> *</span>
                 <input
                   required
                   className="mt-2 min-h-12 w-full rounded-xl border px-4 font-normal"
@@ -1101,7 +1103,7 @@ function Modal({
               </label>
               <label className="block text-sm font-bold">
                 {english ? "Email address" : "メールアドレス"}
-                <span className="text-orange"> *</span>
+                <span className="text-primary"> *</span>
                 <input
                   required
                   type="email"
@@ -1111,7 +1113,7 @@ function Modal({
               </label>
               <label className="block text-sm font-bold">
                 {english ? "Your name" : "お名前"}
-                <span className="text-orange"> *</span>
+                <span className="text-primary"> *</span>
                 <input
                   required
                   className="mt-2 min-h-12 w-full rounded-xl border px-4 font-normal"
@@ -1132,7 +1134,7 @@ function Modal({
                   ? "I agree to the privacy policy"
                   : "プライバシーポリシーに同意します"}
               </label>
-              <button className="btn-orange w-full" type="submit">
+              <button className="btn-primary w-full" type="submit">
                 {english ? "Send enquiry" : "送信する"}
                 <ArrowRight size={18} />
               </button>
@@ -1170,7 +1172,7 @@ function Footer() {
           </div>
           <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
             <div>
-              <p className="mb-4 text-xs font-bold text-orange">SERVICES</p>
+              <p className="mb-4 text-xs font-bold text-primary-light">SERVICES</p>
               {groups.map((g) => (
                 <a
                   className="block py-2 text-sm text-white/70 hover:text-white"
@@ -1182,7 +1184,7 @@ function Footer() {
               ))}
             </div>
             <div>
-              <p className="mb-4 text-xs font-bold text-orange">COMPANY</p>
+              <p className="mb-4 text-xs font-bold text-primary-light">COMPANY</p>
               {navigation.slice(0, 4).map((n) => (
                 <a
                   className="block py-2 text-sm text-white/70 hover:text-white"
@@ -1194,7 +1196,7 @@ function Footer() {
               ))}
             </div>
             <div>
-              <p className="mb-4 text-xs font-bold text-orange">CONTENTS</p>
+              <p className="mb-4 text-xs font-bold text-primary-light">CONTENTS</p>
               {navigation.slice(4).map((n) => (
                 <a
                   className="block py-2 text-sm text-white/70 hover:text-white"
@@ -1255,7 +1257,7 @@ function Floating() {
         </button>
         <button
           onClick={() => dispatchEvent(new Event("openContact"))}
-          className="btn-orange rounded-l-none"
+          className="btn-primary rounded-l-none"
         >
           {english ? "Free consultation" : "無料相談"}
           <ArrowRight size={16} />
@@ -1264,7 +1266,7 @@ function Floating() {
       <div className="fixed right-0 top-1/2 z-30 hidden -translate-y-1/2 overflow-hidden rounded-l-2xl shadow-soft xl:block">
         <button
           onClick={() => dispatchEvent(new Event("openContact"))}
-          className="vertical min-h-40 bg-orange px-4 py-5 text-sm font-bold text-white"
+          className="vertical min-h-40 bg-primary px-4 py-5 text-sm font-bold text-white"
         >
           {english ? "Free consultation" : "無料相談はこちら"}
         </button>
